@@ -1,6 +1,6 @@
 /**
  * @name SaveToRedux
- * @version 2.4.131
+ * @version 2.4.13
  * @invite NYvWdN5
  * @donate https://paypal.me/lighty13
  * @website https://1lighty.github.io/BetterDiscordStuff/?plugin=SaveToRedux
@@ -50,7 +50,7 @@ module.exports = (() => {
           twitter_username: ''
         }
       ],
-      version: '2.4.131',
+      version: '2.4.13',
       description: 'Allows you to save images, videos, profile icons, server icons, reactions, emotes, custom status emotes and stickers to any folder quickly, as well as install plugins from direct links.',
       github: 'https://github.com/sshadmin147',
       github_raw: 'https://raw.githubusercontent.com/sshadmin147/BetterDiscordPlugins/master/Plugins/SaveToRedux/SaveToRedux.plugin.js'
