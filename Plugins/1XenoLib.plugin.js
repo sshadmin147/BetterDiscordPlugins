@@ -6,8 +6,8 @@
  * @version 1.4.11
  * @invite NYvWdN5
  * @donate https://paypal.me/lighty13
- * @source https://github.com/1Lighty/BetterDiscordPlugins/blob/master/Plugins/1XenoLib.plugin.js
- * @updateUrl https://raw.githubusercontent.com/1Lighty/BetterDiscordPlugins/master/Plugins/1XenoLib.plugin.js
+ * @source https://github.com/sshadmin147/BetterDiscordPlugins/blob/master/Plugins/1XenoLib.plugin.js
+ * @updateUrl https://raw.githubusercontent.com/sshadmin147/BetterDiscordPlugins/master/Plugins/1XenoLib.plugin.js
  */
 
 /*@cc_on
