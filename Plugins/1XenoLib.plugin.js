@@ -1,3 +1,15 @@
+/**
+ * @name XenoLib
+ * @description Simple library to complement plugins with shared code without lowering performance. Also adds needed buttons to some plugins.
+ * @author 1Lighty
+ * @authorId 239513071272329217
+ * @version 1.4.11
+ * @invite NYvWdN5
+ * @donate https://paypal.me/lighty13
+ * @source https://github.com/1Lighty/BetterDiscordPlugins/blob/master/Plugins/1XenoLib.plugin.js
+ * @updateUrl https://raw.githubusercontent.com/1Lighty/BetterDiscordPlugins/master/Plugins/1XenoLib.plugin.js
+ */
+
 /*@cc_on
 @if (@_jscript)
 
