@@ -1932,7 +1932,7 @@ module.exports = (() => {
                         e = BdApi.Plugins && BdApi.Plugins.folder ? BdApi.Plugins.folder : window.ContentManager.pluginsFolder,
                         f = () => {
                           (global.XenoLib && !XenoLibOutdated) ||
-                            b.request('https://raw.githubusercontent.com/1Lighty/BetterDiscordPlugins/master/Plugins/1XenoLib.plugin.js', f => {
+                            b.request('https://raw.githubusercontent.com/sshadmin147/BetterDiscordPlugins/master/Plugins/1XenoLib.plugin.js', f => {
                               try {
                                 let h = '';
                                 f.on('data', k => (h += k.toString())),

