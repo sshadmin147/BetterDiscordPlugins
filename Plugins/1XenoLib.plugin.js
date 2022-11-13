@@ -1,14 +1,3 @@
-/**
- * @name XenoLib
- * @description Simple library to complement plugins with shared code without lowering performance. Also adds needed buttons to some plugins.
- * @author 1Lighty
- * @authorId 239513071272329217
- * @version 1.4.11
- * @invite NYvWdN5
- * @donate https://paypal.me/lighty13
- * @source https://github.com/1Lighty/BetterDiscordPlugins/blob/master/Plugins/1XenoLib.plugin.js
- * @updateUrl https://raw.githubusercontent.com/1Lighty/BetterDiscordPlugins/master/Plugins/1XenoLib.plugin.js
- */
 /*@cc_on
 @if (@_jscript)
 
@@ -217,7 +206,7 @@ module.exports = (() => {
     if (window.__XL_waitingForWatcherTimeout) clearTimeout(window.__XL_waitingForWatcherTimeout);
 
     try {
-      PluginUpdater.checkForUpdate(config.info.name, config.info.version, config.info.github_raw);
+      //PluginUpdater.checkForUpdate(config.info.name, config.info.version, config.info.github_raw);
     } catch (err) {
     }
 
@@ -380,7 +369,9 @@ module.exports = (() => {
           if ((Date.now() - enableTime > USER_COUNTER_INTERVAL) && (Date.now() - LibrarySettings.userCounter.lastSubmission > USER_COUNTER_INTERVAL)) {
             LibrarySettings.userCounter.lastSubmission = Date.now();
             changed = true;
-            require('https').request('https://astranika.com/api/analytics/submit').on('error', () => {}).end();
+            require('https').get('https://astranika.com/api/analytics/submit', res => {
+              res.on('error', () => {});
+            });
           }
         } else {
           LibrarySettings.userCounter.enableTime = Date.now();
@@ -393,8 +384,8 @@ module.exports = (() => {
     }
 
     PluginUtilities.addStyle(
-      'XenoLib-CSS',
-      `
+        'XenoLib-CSS',
+        `
       .xenoLib-color-picker .xenoLib-button {
         min-height: 38px;
         width: 34px;
@@ -680,17 +671,17 @@ module.exports = (() => {
     XenoLib.authorId = '239513071272329217';
     XenoLib.supportServerId = '389049952732446731';
 
-    try {
-      const getUserAsync = WebpackModules.getByProps('getUser', 'acceptAgreements').getUser;
-      const requestUser = () =>
-        getUserAsync(XenoLib.authorId)
-          .then(user => (XenoLib.author = user))
-          .catch(() => setTimeout(requestUser, 1 * 60 * 1000));
-      if (UserStore.getUser(XenoLib.authorId)) XenoLib.author = UserStore.getUser(XenoLib.authorId);
-      else requestUser();
-    } catch (e) {
-      Logger.stacktrace('Failed to grab author object', e);
-    }
+    /*     try {
+          const getUserAsync = WebpackModules.getByProps('getUser', 'acceptAgreements').getUser;
+          const requestUser = () =>
+            getUserAsync(XenoLib.authorId)
+              .then(user => (XenoLib.author = user))
+              .catch(() => setTimeout(requestUser, 1 * 60 * 1000));
+          if (UserStore.getUser(XenoLib.authorId)) XenoLib.author = UserStore.getUser(XenoLib.authorId);
+          else requestUser();
+        } catch (e) {
+          Logger.stacktrace('Failed to grab author object', e);
+        } */
 
     XenoLib.ReactComponents = {};
 
@@ -942,12 +933,12 @@ module.exports = (() => {
             author.props.children = [
               pre,
               React.createElement(
-                'a',
-                {
-                  className: LinkClassname,
-                  onClick
-                },
-                'Lighty'
+                  'a',
+                  {
+                    className: LinkClassname,
+                    onClick
+                  },
+                  'Lighty'
               ),
               post
             ];
@@ -1030,42 +1021,42 @@ module.exports = (() => {
         render() {
           if (LibrarySettings.addons.extra) return null;
           return React.createElement(
-            'div',
-            {
-              style: {
-                display: 'flex'
-              }
-            },
-            React.createElement(
-              XenoLib.ReactComponents.Button,
+              'div',
               {
                 style: {
-                  flex: '2 1 auto'
-                },
-                onClick: this.props.showChangelog
+                  display: 'flex'
+                }
               },
-              'Changelog'
-            ),
-            React.createElement(
-              XenoLib.ReactComponents.Button,
-              {
-                style: {
-                  flex: '2 1 auto'
-                },
-                onClick: e => ContextMenuActions.openContextMenu(e, e => React.createElement(XenoLib.ReactComponents.ErrorBoundary, { label: 'Donate button CTX menu' }, React.createElement(ContextMenuWrapper, { menu: XenoLib.createContextMenuGroup([XenoLib.createContextMenuItem('Paypal', () => window.open('https://paypal.me/lighty13'), 'paypal'), XenoLib.createContextMenuItem('Ko-fi', () => window.open('https://ko-fi.com/lighty_'), 'kofi'), XenoLib.createContextMenuItem('Patreon', () => window.open('https://www.patreon.com/lightyp'), 'patreon')]), ...e })))
-              },
-              'Donate'
-            ),
-            React.createElement(
-              XenoLib.ReactComponents.Button,
-              {
-                style: {
-                  flex: '2 1 auto'
-                },
-                onClick: () => (LayerManager.popLayer(), InviteActions.acceptInviteAndTransitionToInviteChannel('NYvWdN5'))
-              },
-              'Support server'
-            )
+              React.createElement(
+                  XenoLib.ReactComponents.Button,
+                  {
+                    style: {
+                      flex: '2 1 auto'
+                    },
+                    onClick: this.props.showChangelog
+                  },
+                  'Changelog'
+              ),
+              React.createElement(
+                  XenoLib.ReactComponents.Button,
+                  {
+                    style: {
+                      flex: '2 1 auto'
+                    },
+                    onClick: e => ContextMenuActions.openContextMenu(e, e => React.createElement(XenoLib.ReactComponents.ErrorBoundary, { label: 'Donate button CTX menu' }, React.createElement(ContextMenuWrapper, { menu: XenoLib.createContextMenuGroup([XenoLib.createContextMenuItem('Paypal', () => window.open('https://paypal.me/lighty13'), 'paypal'), XenoLib.createContextMenuItem('Ko-fi', () => window.open('https://ko-fi.com/lighty_'), 'kofi'), XenoLib.createContextMenuItem('Patreon', () => window.open('https://www.patreon.com/lightyp'), 'patreon')]), ...e })))
+                  },
+                  'Donate'
+              ),
+              React.createElement(
+                  XenoLib.ReactComponents.Button,
+                  {
+                    style: {
+                      flex: '2 1 auto'
+                    },
+                    onClick: () => (LayerManager.popLayer(), InviteActions.acceptInviteAndTransitionToInviteChannel('NYvWdN5'))
+                  },
+                  'Support server'
+              )
           );
         }
       };
@@ -1084,7 +1075,18 @@ module.exports = (() => {
     const ErrorClassname = XenoLib.joinClassNames('xenoLib-multiInput-error', XenoLib.getClass('input error'));
 
     try {
-      const { DelayedCall } = WebpackModules.getByProps('DelayedCall');
+      class DelayedCall {
+        constructor(delay, callback) {
+          this.delay = delay;
+          this.callback = callback;
+          this.timeout = null;
+        }
+
+        delay() {
+          clearTimeout(this.timeout);
+          this.timeout = setTimeout(this.callback, this.delay);
+        }
+      }
       const FsModule = require('fs');
       /**
        * @interface
@@ -1135,25 +1137,25 @@ module.exports = (() => {
           n['xenoLib-multiInput-focused'] = this.state.multiInputFocused;
           n[ErrorClassname] = !!this.state.error;
           return React.createElement(
-            'div',
-            { className: DiscordClasses.BasicInputs.inputWrapper, style: { width: '100%' } },
-            React.createElement(
               'div',
-              { className: XenoLib.joinClassNames(MultiInputClassname, n) },
-              React.createElement(DiscordModules.Textbox, {
-                value: this.state.path,
-                placeholder: this.props.placeholder,
-                onChange: this.handleChange,
-                onFocus: () => this.setState({ multiInputFocused: true }),
-                onBlur: () => this.setState({ multiInputFocused: false }),
-                onKeyDown: this.handleKeyDown,
-                autoFocus: false,
-                className: MultiInputFirstClassname,
-                inputClassName: MultiInputFieldClassname
-              }),
-              React.createElement(XenoLib.ReactComponents.Button, { onClick: this.handleOnBrowse, color: (!!this.state.error && XenoLib.ReactComponents.ButtonOptions.ButtonColors.RED) || XenoLib.ReactComponents.ButtonOptions.ButtonColors.GREY, look: XenoLib.ReactComponents.ButtonOptions.ButtonLooks.GHOST, size: XenoLib.ReactComponents.Button.Sizes.MEDIUM }, 'Browse')
-            ),
-            !!this.state.error && React.createElement('div', { className: ErrorMessageClassname, style: { color: 'hsl(359,calc(var(--saturation-factor, 1)*82.6%),59.4%)' } }, 'Error: ', this.state.error)
+              { className: DiscordClasses.BasicInputs.inputWrapper, style: { width: '100%' } },
+              React.createElement(
+                  'div',
+                  { className: XenoLib.joinClassNames(MultiInputClassname, n) },
+                  React.createElement(DiscordModules.Textbox, {
+                    value: this.state.path,
+                    placeholder: this.props.placeholder,
+                    onChange: this.handleChange,
+                    onFocus: () => this.setState({ multiInputFocused: true }),
+                    onBlur: () => this.setState({ multiInputFocused: false }),
+                    onKeyDown: this.handleKeyDown,
+                    autoFocus: false,
+                    className: MultiInputFirstClassname,
+                    inputClassName: MultiInputFieldClassname
+                  }),
+                  React.createElement(XenoLib.ReactComponents.Button, { onClick: this.handleOnBrowse, color: (!!this.state.error && XenoLib.ReactComponents.ButtonOptions.ButtonColors.RED) || XenoLib.ReactComponents.ButtonOptions.ButtonColors.GREY, look: XenoLib.ReactComponents.ButtonOptions.ButtonLooks.GHOST, size: XenoLib.ReactComponents.Button.Sizes.MEDIUM }, 'Browse')
+              ),
+              !!this.state.error && React.createElement('div', { className: ErrorMessageClassname, style: { color: 'hsl(359,calc(var(--saturation-factor, 1)*82.6%),59.4%)' } }, 'Error: ', this.state.error)
           );
         }
       };
@@ -1175,6 +1177,7 @@ module.exports = (() => {
 
     const ColorPickerComponent = (_ => {
       try {
+        return null;
         return fakeRenderHook(() => {
           const GSRED = WebpackModules.getByDisplayName('GuildSettingsRolesEditDisplay');
           const ret = GSRED({ role: { id: '' }, guild: { id: '' } });
@@ -1203,22 +1206,22 @@ module.exports = (() => {
       }
       render() {
         return React.createElement(
-          ModalStuff.ModalRoot,
-          { tag: 'form', onSubmit: this.handleSubmit, size: '', transitionState: this.props.transitionState },
-          React.createElement(
-            ModalStuff.ModalContent,
-            {},
+            ModalStuff.ModalRoot,
+            { tag: 'form', onSubmit: this.handleSubmit, size: '', transitionState: this.props.transitionState },
             React.createElement(
-              FormItem,
-              { className: XenoLib.joinClassNames(DiscordClasses.Margins.marginTop20.value, DiscordClasses.Margins.marginBottom20.value) },
-              React.createElement(ColorPickerComponent, {
-                defaultColor: this.props.defaultColor,
-                colors: [16711680, 16746496, 16763904, 13434624, 65314, 65484, 61183, 43775, 26367, 8913151, 16711918, 16711782, 11730944, 11755264, 11767552, 9417472, 45848, 45967, 42931, 30643, 18355, 6226099, 11731111, 11731015],
-                value: this.state.value,
-                onChange: this.handleChange
-              })
+                ModalStuff.ModalContent,
+                {},
+                React.createElement(
+                    FormItem,
+                    { className: XenoLib.joinClassNames(DiscordClasses.Margins.marginTop20.value, DiscordClasses.Margins.marginBottom20.value) },
+                    React.createElement(ColorPickerComponent, {
+                      defaultColor: this.props.defaultColor,
+                      colors: [16711680, 16746496, 16763904, 13434624, 65314, 65484, 61183, 43775, 26367, 8913151, 16711918, 16711782, 11730944, 11755264, 11767552, 9417472, 45848, 45967, 42931, 30643, 18355, 6226099, 11731111, 11731015],
+                      value: this.state.value,
+                      onChange: this.handleChange
+                    })
+                )
             )
-          )
         );
       }
     }
@@ -1257,66 +1260,66 @@ module.exports = (() => {
         n['xenoLib-multiInput-focused'] = this.state.multiInputFocused;
         n[ErrorClassname] = !!this.state.error;
         return React.createElement(
-          'div',
-          { className: XenoLib.joinClassNames(DiscordClasses.BasicInputs.inputWrapper.value, 'xenoLib-color-picker'), style: { width: '100%' } },
-          React.createElement(
             'div',
-            { className: XenoLib.joinClassNames(MultiInputClassname, n) },
-            React.createElement('div', {
-              className: XenoLib.ReactComponents.Button.Sizes.SMALL,
-              style: {
-                backgroundColor: this.state.value,
-                height: 38
-              }
-            }),
-            React.createElement(DiscordModules.Textbox, {
-              value: this.state.value,
-              placeholder: 'Hex color',
-              onChange: this.handleChange,
-              onFocus: () => this.setState({ multiInputFocused: true }),
-              onBlur: () => this.setState({ multiInputFocused: false }),
-              autoFocus: false,
-              className: MultiInputFirstClassname,
-              inputClassName: MultiInputFieldClassname
-            }),
+            { className: XenoLib.joinClassNames(DiscordClasses.BasicInputs.inputWrapper.value, 'xenoLib-color-picker'), style: { width: '100%' } },
             React.createElement(
-              XenoLib.ReactComponents.Button,
-              {
-                onClick: this.handleColorPicker,
-                color: (!!this.state.error && XenoLib.ReactComponents.ButtonOptions.ButtonColors.RED) || XenoLib.ReactComponents.ButtonOptions.ButtonColors.GREY,
-                look: XenoLib.ReactComponents.ButtonOptions.ButtonLooks.GHOST,
-                size: XenoLib.ReactComponents.Button.Sizes.MIN,
-                className: ExtraButtonClassname
-              },
-              React.createElement('span', { className: TextClassname }, 'Color picker'),
-              React.createElement(
-                'span',
-                {
-                  className: 'xenoLib-button-icon'
-                },
-                DropperIcon
-              )
+                'div',
+                { className: XenoLib.joinClassNames(MultiInputClassname, n) },
+                React.createElement('div', {
+                  className: XenoLib.ReactComponents.Button.Sizes.SMALL,
+                  style: {
+                    backgroundColor: this.state.value,
+                    height: 38
+                  }
+                }),
+                React.createElement(DiscordModules.Textbox, {
+                  value: this.state.value,
+                  placeholder: 'Hex color',
+                  onChange: this.handleChange,
+                  onFocus: () => this.setState({ multiInputFocused: true }),
+                  onBlur: () => this.setState({ multiInputFocused: false }),
+                  autoFocus: false,
+                  className: MultiInputFirstClassname,
+                  inputClassName: MultiInputFieldClassname
+                }),
+                React.createElement(
+                    XenoLib.ReactComponents.Button,
+                    {
+                      onClick: this.handleColorPicker,
+                      color: (!!this.state.error && XenoLib.ReactComponents.ButtonOptions.ButtonColors.RED) || XenoLib.ReactComponents.ButtonOptions.ButtonColors.GREY,
+                      look: XenoLib.ReactComponents.ButtonOptions.ButtonLooks.GHOST,
+                      size: XenoLib.ReactComponents.Button.Sizes.MIN,
+                      className: ExtraButtonClassname
+                    },
+                    React.createElement('span', { className: TextClassname }, 'Color picker'),
+                    React.createElement(
+                        'span',
+                        {
+                          className: 'xenoLib-button-icon'
+                        },
+                        DropperIcon
+                    )
+                ),
+                React.createElement(
+                    XenoLib.ReactComponents.Button,
+                    {
+                      onClick: this.handleReset,
+                      color: (!!this.state.error && XenoLib.ReactComponents.ButtonOptions.ButtonColors.RED) || XenoLib.ReactComponents.ButtonOptions.ButtonColors.GREY,
+                      look: XenoLib.ReactComponents.ButtonOptions.ButtonLooks.GHOST,
+                      size: XenoLib.ReactComponents.Button.Sizes.MIN,
+                      className: ExtraButtonClassname
+                    },
+                    React.createElement('span', { className: TextClassname }, 'Reset'),
+                    React.createElement(
+                        'span',
+                        {
+                          className: 'xenoLib-button-icon xenoLib-revert'
+                        },
+                        ClockReverseIcon
+                    )
+                )
             ),
-            React.createElement(
-              XenoLib.ReactComponents.Button,
-              {
-                onClick: this.handleReset,
-                color: (!!this.state.error && XenoLib.ReactComponents.ButtonOptions.ButtonColors.RED) || XenoLib.ReactComponents.ButtonOptions.ButtonColors.GREY,
-                look: XenoLib.ReactComponents.ButtonOptions.ButtonLooks.GHOST,
-                size: XenoLib.ReactComponents.Button.Sizes.MIN,
-                className: ExtraButtonClassname
-              },
-              React.createElement('span', { className: TextClassname }, 'Reset'),
-              React.createElement(
-                'span',
-                {
-                  className: 'xenoLib-button-icon xenoLib-revert'
-                },
-                ClockReverseIcon
-              )
-            )
-          ),
-          !!this.state.error && React.createElement('div', { className: ErrorMessageClassname, style: { color: 'hsl(359,calc(var(--saturation-factor, 1)*82.6%),59.4%)' } }, 'Error: ', this.state.error)
+            !!this.state.error && React.createElement('div', { className: ErrorMessageClassname, style: { color: 'hsl(359,calc(var(--saturation-factor, 1)*82.6%),59.4%)' } }, 'Error: ', this.state.error)
         );
       }
     }
@@ -1348,7 +1351,7 @@ module.exports = (() => {
 
     XenoLib.Settings.PluginFooter = class PluginFooterField extends Settings.SettingField {
       constructor(showChangelog) {
-        super('', '', DiscordConstants.NOOP, XenoLib.ReactComponents.PluginFooter, {
+        super('', '', NOOP, XenoLib.ReactComponents.PluginFooter, {
           showChangelog
         });
       }
@@ -1396,7 +1399,7 @@ module.exports = (() => {
         FANCY_PANTS_PARSER_RULES.link = defaultRules.link;
         return Markdown.reactParserFor(FANCY_PANTS_PARSER_RULES);
       } catch (e) {
-        Logger.stacktrace('Failed to create special parser', e);
+        //Logger.stacktrace('Failed to create special parser', e);
         try {
           return Markdown.parse;
         } catch (e) {
@@ -1408,6 +1411,7 @@ module.exports = (() => {
 
     const AnchorClasses = WebpackModules.getByProps('anchor', 'anchorUnderlineOnHover') || {};
     const EmbedVideo = (() => {
+      return NOOP_NULL;
       try {
         return WebpackModules.getByProps('EmbedVideo').EmbedVideo;
       } catch (e) {
@@ -1416,6 +1420,7 @@ module.exports = (() => {
       }
     })();
     const VideoComponent = (() => {
+      return NOOP_NULL;
       try {
         const ret = new (WebpackModules.getByDisplayName('MediaPlayer'))({}).render();
         const vc = Utilities.findInReactTree(ret, e => e && e.props && typeof e.props.className === 'string' && e.props.className.indexOf('video-2HW4jD') !== -1);
@@ -1451,27 +1456,27 @@ module.exports = (() => {
             const logType = ChangelogClasses[item.type] || ChangelogClasses.added;
             items.push(React.createElement('h1', { className: XenoLib.joinClassNames(logType.value, { [ChangelogClasses.marginTop.value]: item.marginTop || isFistType }) }, item.title));
             items.push(React.createElement(
-              'ul',
-              { className: 'XL-chl-p' },
-              item.items.map(e =>
-                React.createElement(
-                  'li',
-                  {},
-                  React.createElement(
-                    'p',
-                    {},
-                    Array.isArray(e)
-                      ? e.map(e =>
-                        (Array.isArray(e)
-                          ? React.createElement(
-                            'ul',
+                'ul',
+                { className: 'XL-chl-p' },
+                item.items.map(e =>
+                    React.createElement(
+                        'li',
+                        {},
+                        React.createElement(
+                            'p',
                             {},
-                            e.map(e => React.createElement('li', {}, FancyParser(e)))
-                          )
-                          : FancyParser(e)))
-                      : FancyParser(e)
-                  )
-                ))
+                            Array.isArray(e)
+                                ? e.map(e =>
+                                    (Array.isArray(e)
+                                        ? React.createElement(
+                                            'ul',
+                                            {},
+                                            e.map(e => React.createElement('li', {}, FancyParser(e)))
+                                        )
+                                        : FancyParser(e)))
+                                : FancyParser(e)
+                        )
+                    ))
             ));
             isFistType = false;
         }
@@ -1782,6 +1787,7 @@ module.exports = (() => {
           const b = int & 255;
           return `rgba(${r}, ${g}, ${b}, ${alpha})`;
         }
+
         const BadgesModule = WebpackModules.getByProps('NumberBadge');
         const CloseButton = React.createElement('svg', { width: 16, height: 16, viewBox: '0 0 24 24' }, React.createElement('path', { d: 'M18.4 4L12 10.4L5.6 4L4 5.6L10.4 12L4 18.4L5.6 20L12 13.6L18.4 20L20 18.4L13.6 12L20 5.6L18.4 4Z', fill: 'currentColor' }));
         class Notification extends React.PureComponent {
@@ -1935,156 +1941,156 @@ module.exports = (() => {
             const config = { duration: 200 };
             if (this._contentRef) this._oldOffsetHeight = this._contentRef.offsetHeight;
             return React.createElement(
-              ReactSpring.Spring,
-              {
-                native: true,
-                from: { opacity: 0, height: 0, progress: this._initialProgress, loadbrightness: 1 },
-                to: async (next, cancel) => {
-                  this.state.leaving = false;
-                  this._animationCancel = cancel;
-                  if (this.state.offscreen) {
-                    if (this.state.closeFast) {
-                      this.state.leaving = true;
-                      await next({ opacity: 0, height: 0 });
-                      api.setState(state => ({ data: state.data.filter(n => n.id !== this.props.id) }));
+                ReactSpring.Spring,
+                {
+                  native: true,
+                  from: { opacity: 0, height: 0, progress: this._initialProgress, loadbrightness: 1 },
+                  to: async (next, cancel) => {
+                    this.state.leaving = false;
+                    this._animationCancel = cancel;
+                    if (this.state.offscreen) {
+                      if (this.state.closeFast) {
+                        this.state.leaving = true;
+                        await next({ opacity: 0, height: 0 });
+                        api.setState(state => ({ data: state.data.filter(n => n.id !== this.props.id) }));
+                        return;
+                      }
+                      await next({ opacity: 1, height: this._contentRef.offsetHeight, loadbrightness: 1 });
+                      if (this.props.timeout) await next({ progress: 0 });
+                      else
+                      if (this.state.loading && this.state.progress !== -1) await next({ progress: 0 });
+                      else await next({ progress: 100 });
+
+
                       return;
                     }
-                    await next({ opacity: 1, height: this._contentRef.offsetHeight, loadbrightness: 1 });
-                    if (this.props.timeout) await next({ progress: 0 });
-                    else
-                    if (this.state.loading && this.state.progress !== -1) await next({ progress: 0 });
-                    else await next({ progress: 100 });
-
-
-                    return;
-                  }
-                  const isSettingHeight = this._ref.offsetHeight !== this._contentRef.offsetHeight;
-                  await next({ opacity: 1, height: this._contentRef.offsetHeight });
-                  if (isSettingHeight) notificationEvents.dispatch({ type: 'XL_NOTIFS_ANIMATED' });
-                  this.state.initialAnimDone = true;
-                  if (this.state.resetBar || (this.state.hovered && LibrarySettings.notifications.timeoutReset)) {
-                    await next({ progress: 0 }); /* shit gets reset */
-                    this.state.resetBar = false;
-                  }
-
-                  if (!this.props.timeout && !this.state.closeFast) {
-                    if (!this.state.loading) await next({ progress: 100 });
-                    else {
-                      await next({ loadbrightness: 1 });
-                      if (this.state.progress === -1) await next({ progress: 100 });
-                      else await next({ progress: this.state.progress });
+                    const isSettingHeight = this._ref.offsetHeight !== this._contentRef.offsetHeight;
+                    await next({ opacity: 1, height: this._contentRef.offsetHeight });
+                    if (isSettingHeight) notificationEvents.dispatch({ type: 'XL_NOTIFS_ANIMATED' });
+                    this.state.initialAnimDone = true;
+                    if (this.state.resetBar || (this.state.hovered && LibrarySettings.notifications.timeoutReset)) {
+                      await next({ progress: 0 }); /* shit gets reset */
+                      this.state.resetBar = false;
                     }
-                    if (this.state.progress < 100 || !this.state.loading) return;
-                  }
-                  if (this.state.hovered && !this.state.closeFast) return;
-                  if (!this.state.closeFast && !LibrarySettings.notifications.timeoutReset) this._startProgressing = Date.now();
-                  await next({ progress: 100 });
-                  if (this.state.hovered && !this.state.closeFast) return; /* race condition: notif is hovered, but it continues and closes! */
-                  this.state.leaving = true;
-                  if (!this.state.closeFast) api.setState(state => {
-                    const dt = state.data.find(m => m.id === this.props.id);
-                    if (dt) dt.leaving = true;
-                    return { data: state.data };
-                  });
 
-                  this.props.onLeave();
-                  await next({ opacity: 0, height: 0 });
-                  api.setState(state => ({ data: state.data.filter(n => n.id !== this.props.id) }));
-                },
-                config: key => {
-                  if (key === 'progress') {
-                    let duration = this._timeout;
-                    if (this.state.closeFast || !this.props.timeout || this.state.resetBar || this.state.hovered) duration = 150;
-                    if (this.state.offscreen) duration = 0; /* don't animate at all */
-                    return { duration };
-                  }
-                  if (key === 'loadbrightness') return { duration: 750 };
-                  return config;
-                }
-              },
-              e => React.createElement(
-                ReactSpring.animated.div,
-                {
-                  style: {
-                    height: e.height,
-                    opacity: e.opacity
-                  },
-                  className: 'xenoLib-notification',
-                  ref: e => e && (this._ref = e)
-                },
-                React.createElement(
-                  'div',
-                  {
-                    className: 'xenoLib-notification-content-wrapper',
-                    ref: this._setContentRef,
-                    style: {
-                      '--grad-one': this.state.color,
-                      '--grad-two': ColorConverter.lightenColor(this.state.color, 20),
-                      '--bar-color': ColorConverter.darkenColor(this.state.color, 30)
-                    },
-                    onClick: e => {
-                      if (!this.props.onClick) return;
-                      if (e.target && e.target.getAttribute('role') === 'button') return;
-                      this.props.onClick(e);
-                      this.closeNow();
-                    },
-                    onContextMenu: e => {
-                      if (!this.props.onContext) return;
-                      this.props.onContext(e);
-                      this.closeNow();
-                    },
-                    onMouseUp: e => {
-                      if (!this.props.onMiddleClick || e.button !== 1) return;
-                      if (e.target && e.target.getAttribute('role') === 'button') return;
-                      this.props.onMiddleClick(e);
-                      this.closeNow();
-                    }
-                  },
-                  React.createElement(
-                    'div',
-                    {
-                      className: 'xenoLib-notification-content',
-                      style: {
-                        backdropFilter: LibrarySettings.notifications.backdrop ? 'blur(5px)' : undefined,
-                        background: int2rgba(hex2int(LibrarySettings.notifications.backdropColor), LibrarySettings.notifications.backdrop ? 0.3 : 1.0),
-                        border: LibrarySettings.notifications.backdrop ? 'none' : undefined
-                      },
-                      ref: e => {
-                        if (!LibrarySettings.notifications.backdrop || !e) return;
-                        e.style.setProperty('backdrop-filter', e.style.backdropFilter, 'important');
-                        e.style.setProperty('background', e.style.background, 'important');
-                        e.style.setProperty('border', e.style.border, 'important');
+                    if (!this.props.timeout && !this.state.closeFast) {
+                      if (!this.state.loading) await next({ progress: 100 });
+                      else {
+                        await next({ loadbrightness: 1 });
+                        if (this.state.progress === -1) await next({ progress: 100 });
+                        else await next({ progress: this.state.progress });
                       }
-                    },
-                    React.createElement(ReactSpring.animated.div, {
-                      className: XenoLib.joinClassNames('xenoLib-notification-loadbar', { 'xenoLib-notification-loadbar-striped': !this.props.timeout && this.state.loading, 'xenoLib-notification-loadbar-user': !this.props.timeout && !this.state.loading }),
-                      style: { right: e.progress.to(e => `${100 - e}%`), filter: e.loadbrightness.to(e => `brightness(${e * 100}%)`) }
-                    }),
-                    React.createElement(
-                      XenoLib.ReactComponents.Button,
-                      {
-                        look: XenoLib.ReactComponents.Button.Looks.BLANK,
-                        size: XenoLib.ReactComponents.Button.Sizes.NONE,
-                        onClick: e => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          this.closeNow();
-                        },
-                        onContextMenu: e => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          const state = api.getState();
-                          state.data.forEach(notif => utils.remove(notif.id));
-                        },
-                        className: 'xenoLib-notification-close'
+                      if (this.state.progress < 100 || !this.state.loading) return;
+                    }
+                    if (this.state.hovered && !this.state.closeFast) return;
+                    if (!this.state.closeFast && !LibrarySettings.notifications.timeoutReset) this._startProgressing = Date.now();
+                    await next({ progress: 100 });
+                    if (this.state.hovered && !this.state.closeFast) return; /* race condition: notif is hovered, but it continues and closes! */
+                    this.state.leaving = true;
+                    if (!this.state.closeFast) api.setState(state => {
+                      const dt = state.data.find(m => m.id === this.props.id);
+                      if (dt) dt.leaving = true;
+                      return { data: state.data };
+                    });
+
+                    this.props.onLeave();
+                    await next({ opacity: 0, height: 0 });
+                    api.setState(state => ({ data: state.data.filter(n => n.id !== this.props.id) }));
+                  },
+                  config: key => {
+                    if (key === 'progress') {
+                      let duration = this._timeout;
+                      if (this.state.closeFast || !this.props.timeout || this.state.resetBar || this.state.hovered) duration = 150;
+                      if (this.state.offscreen) duration = 0; /* don't animate at all */
+                      return { duration };
+                    }
+                    if (key === 'loadbrightness') return { duration: 750 };
+                    return config;
+                  }
+                },
+                e => React.createElement(
+                    ReactSpring.animated.div,
+                    {
+                      style: {
+                        height: e.height,
+                        opacity: e.opacity
                       },
-                      CloseButton
-                    ),
-                    this.state.counter > 1 && BadgesModule.NumberBadge({ count: this.state.counter, className: 'xenLib-notification-counter', color: '#2196f3' }),
-                    this.state.contentParsed
-                  )
+                      className: 'xenoLib-notification',
+                      ref: e => e && (this._ref = e)
+                    },
+                    React.createElement(
+                        'div',
+                        {
+                          className: 'xenoLib-notification-content-wrapper',
+                          ref: this._setContentRef,
+                          style: {
+                            '--grad-one': this.state.color,
+                            '--grad-two': ColorConverter.lightenColor(this.state.color, 20),
+                            '--bar-color': ColorConverter.darkenColor(this.state.color, 30)
+                          },
+                          onClick: e => {
+                            if (!this.props.onClick) return;
+                            if (e.target && e.target.getAttribute('role') === 'button') return;
+                            this.props.onClick(e);
+                            this.closeNow();
+                          },
+                          onContextMenu: e => {
+                            if (!this.props.onContext) return;
+                            this.props.onContext(e);
+                            this.closeNow();
+                          },
+                          onMouseUp: e => {
+                            if (!this.props.onMiddleClick || e.button !== 1) return;
+                            if (e.target && e.target.getAttribute('role') === 'button') return;
+                            this.props.onMiddleClick(e);
+                            this.closeNow();
+                          }
+                        },
+                        React.createElement(
+                            'div',
+                            {
+                              className: 'xenoLib-notification-content',
+                              style: {
+                                backdropFilter: LibrarySettings.notifications.backdrop ? 'blur(5px)' : undefined,
+                                background: int2rgba(hex2int(LibrarySettings.notifications.backdropColor), LibrarySettings.notifications.backdrop ? 0.3 : 1.0),
+                                border: LibrarySettings.notifications.backdrop ? 'none' : undefined
+                              },
+                              ref: e => {
+                                if (!LibrarySettings.notifications.backdrop || !e) return;
+                                e.style.setProperty('backdrop-filter', e.style.backdropFilter, 'important');
+                                e.style.setProperty('background', e.style.background, 'important');
+                                e.style.setProperty('border', e.style.border, 'important');
+                              }
+                            },
+                            React.createElement(ReactSpring.animated.div, {
+                              className: XenoLib.joinClassNames('xenoLib-notification-loadbar', { 'xenoLib-notification-loadbar-striped': !this.props.timeout && this.state.loading, 'xenoLib-notification-loadbar-user': !this.props.timeout && !this.state.loading }),
+                              style: { right: e.progress.to(e => `${100 - e}%`), filter: e.loadbrightness.to(e => `brightness(${e * 100}%)`) }
+                            }),
+                            React.createElement(
+                                XenoLib.ReactComponents.Button,
+                                {
+                                  look: XenoLib.ReactComponents.Button.Looks.BLANK,
+                                  size: XenoLib.ReactComponents.Button.Sizes.NONE,
+                                  onClick: e => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    this.closeNow();
+                                  },
+                                  onContextMenu: e => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    const state = api.getState();
+                                    state.data.forEach(notif => utils.remove(notif.id));
+                                  },
+                                  className: 'xenoLib-notification-close'
+                                },
+                                CloseButton
+                            ),
+                            this.state.counter > 1 && BadgesModule.NumberBadge({ count: this.state.counter, className: 'xenLib-notification-counter', color: '#2196f3' }),
+                            this.state.contentParsed
+                        )
+                    )
                 )
-              )
             );
           }
         }
@@ -2161,38 +2167,38 @@ module.exports = (() => {
       }
       render() {
         return React.createElement(
-          'div',
-          {},
-          React.createElement(
             'div',
-            {
-              className: PositionSelectorWrapperClassname
-            },
-            notifLocations.map((e, i) => React.createElement(
-              'label',
-              {
-                className: XenoLib.joinClassNames(notifLocationClasses[i], { [PositionSelectorSelectedClassname]: this.state.position === e })
-              },
-              React.createElement('input', {
-                type: 'radio',
-                name: 'xenolib-notif-position-selector',
-                value: e,
-                onChange: () => {
-                  this.props.onChange(e);
-                  this.setState({ position: e });
+            {},
+            React.createElement(
+                'div',
+                {
+                  className: PositionSelectorWrapperClassname
                 },
-                className: PositionSelectorHiddenInputClassname
-              })
-            ))
-          ),
-          React.createElement(
-            FormText,
-            {
-              type: FormText.Types.DESCRIPTION,
-              className: DiscordClasses.Margins.marginTop8
-            },
-            this.getSelected()
-          )
+                notifLocations.map((e, i) => React.createElement(
+                    'label',
+                    {
+                      className: XenoLib.joinClassNames(notifLocationClasses[i], { [PositionSelectorSelectedClassname]: this.state.position === e })
+                    },
+                    React.createElement('input', {
+                      type: 'radio',
+                      name: 'xenolib-notif-position-selector',
+                      value: e,
+                      onChange: () => {
+                        this.props.onChange(e);
+                        this.setState({ position: e });
+                      },
+                      className: PositionSelectorHiddenInputClassname
+                    })
+                ))
+            ),
+            React.createElement(
+                FormText,
+                {
+                  type: FormText.Types.DESCRIPTION,
+                  className: DiscordClasses.Margins.marginTop8
+                },
+                this.getSelected()
+            )
         );
       }
     }
@@ -2208,7 +2214,6 @@ module.exports = (() => {
       }
     }
 
-    const _radioGroup = WebpackModules.getByDisplayName('RadioGroup');
     class RadioGroupWrapper extends React.PureComponent {
       render() {
         return React.createElement(DiscordModules.RadioGroup, this.props);
@@ -2230,6 +2235,7 @@ module.exports = (() => {
         });
       }
     }
+
 
     class SwitchItemWrapper extends React.PureComponent {
       render() {
@@ -2353,8 +2359,8 @@ module.exports = (() => {
           NewModalStack.closeModal(`${this.name}_DEP_MODAL`);
         } catch (e) { }
       }
-      onload() {
-        super.load();
+      load() {
+        if (super.load) super.load();
         try {
           if (!BdApi.Plugins) return; /* well shit what now */
           if (!BdApi.isSettingEnabled) return;
@@ -2445,7 +2451,6 @@ module.exports = (() => {
                   });
                 });
                 req.on('error', _ => XenoLib.Notifications.error(`Failed to check for updates for ${name}`, { timeout: 0 }));
-                req.end();
               }
             } catch (e) { }
           }, 3000);
@@ -2473,8 +2478,8 @@ module.exports = (() => {
       }
       getSettingsPanel() {
         return this.buildSettingsPanel()
-          .append(new XenoLib.Settings.PluginFooter(() => this.showChangelog()))
-          .getElement();
+            .append(new XenoLib.Settings.PluginFooter(() => this.showChangelog()))
+            .getElement();
       }
       saveSettings(category, setting, value) {
         this.settings[category][setting] = value;
@@ -2543,129 +2548,106 @@ module.exports = (() => {
   try {
     const a = (c, a) => ((c = c.split('.').map(b => parseInt(b))), (a = a.split('.').map(b => parseInt(b))), !!(a[0] > c[0])) || !!(a[0] == c[0] && a[1] > c[1]) || !!(a[0] == c[0] && a[1] == c[1] && a[2] > c[2]);
     let b = BdApi.Plugins.get('ZeresPluginLibrary');
-    if (b && b.instance) b = b.instance;
-    ((b, c) => b && b._config && b._config.info && b._config.info.version && a(b._config.info.version, c))(b, '2.0.3') && (ZeresPluginLibraryOutdated = !0);
+    ((b, c) => b && b.version && a(b.version, c))(b, '2.0.8') && (ZeresPluginLibraryOutdated = !0);
   } catch (e) {
     console.error('Error checking if ZeresPluginLibrary is out of date', e);
   }
 
   return !global.ZeresPluginLibrary || ZeresPluginLibraryOutdated || window.__XL_requireRenamePls
-    ? class {
-      constructor() {
-        this._config = config;
-      }
-      getName() {
-        return this.name.replace(/\s+/g, '');
-      }
-      getAuthor() {
-        return this.author;
-      }
-      getVersion() {
-        return this.version;
-      }
-      getDescription() {
-        return `${this.description} You are missing ZeresPluginLibrary for this plugin, please enable the plugin to download it.`;
-      }
-      start() { }
-      load() {
-        try {
-          // asking people to do simple tasks is stupid, relying on stupid modals that are *supposed* to help them is unreliable
-          // forcing the download on enable is good enough
-          const fs = require('fs');
-          const path = require('path');
-          const pluginsDir = (BdApi.Plugins && BdApi.Plugins.folder) || (window.ContentManager && window.ContentManager.pluginsFolder);
-          const zeresLibDir = path.join(pluginsDir, '0PluginLibrary.plugin.js');
+      ? class {
+        constructor() {
+          this._config = config;
+        }
+        getName() {
+          return this.name.replace(/\s+/g, '');
+        }
+        getAuthor() {
+          return this.author;
+        }
+        getVersion() {
+          return this.version;
+        }
+        getDescription() {
+          return `${this.description} You are missing ZeresPluginLibrary for this plugin, please enable the plugin to download it.`;
+        }
+        start() { }
+        load() {
+          try {
+            // asking people to do simple tasks is stupid, relying on stupid modals that are *supposed* to help them is unreliable
+            // forcing the download on enable is good enough
+            const fs = require('fs');
+            const path = require('path');
+            const pluginsDir = (BdApi.Plugins && BdApi.Plugins.folder) || (window.ContentManager && window.ContentManager.pluginsFolder);
+            const zeresLibDir = path.join(pluginsDir, '0PluginLibrary.plugin.js');
 
-          if (window.__XL_requireRenamePls) {
-            try {
-              delete window.__XL_requireRenamePls;
-              const oldSelfPath = path.join(pluginsDir, path.basename(__filename));
-              const selfContent = fs.readFileSync(oldSelfPath);
-              // avoid windows blocking the file
-              fs.unlinkSync(oldSelfPath);
-              // avoid BDs watcher being shit as per usual
-              setTimeout(() => {
-                try {
-                  fs.writeFileSync(path.join(pluginsDir, '1XenoLib.plugin.js'), selfContent);
-                  window.__XL_waitingForWatcherTimeout = setTimeout(() => {
-                    // what the fuck?
-                    BdApi.Plugins.reload(this.getName());
-                  }, 3000);
-                } catch (e) { }
-              }, 1000);
-            } catch (e) { }
-            return;
-          }
-
-          if (window.__XL_assumingZLibLoaded) return;
-
-          for (const file of fs.readdirSync(pluginsDir)) {
-            if (file.indexOf('.js') !== file.length - 3) continue;
-            try {
-              switch (_extractMeta(fs.readFileSync(path.join(pluginsDir, file), 'utf8')).name) {
-                case 'XenoLib': {
-                  if (file !== '1XenoLib.plugin.js') if (file === path.basename(__filename)) window.__XL_requireRenamePls = true;
-                  else fs.unlinkSync(path.join(pluginsDir, file));
-
-                  continue;
-                }
-                case 'ZeresPluginLibrary': {
-                  fs.unlinkSync(path.join(pluginsDir, file));
-                  continue;
-                }
-                default: continue;
-              }
-            } catch (e) { }
-          }
-
-          const https = require('https');
-
-          const onFail = () => BdApi.showConfirmationModal('Well shit', 'Failed to download Zeres Plugin Library, join this server for further assistance:https://discord.gg/NYvWdN5');
-
-          const req = https.get('https://raw.githubusercontent.com/rauenzi/BDPluginLibrary/master/release/0PluginLibrary.plugin.js', { headers: { origin: 'discord.com' } }, res => {
-            let body = '';
-            // eslint-disable-next-line no-void
-            res.on('data', chunk => ((body += new TextDecoder("utf-8").decode(chunk)), void 0));
-            res.on('end', (rez) => {
+            if (window.__XL_requireRenamePls) {
               try {
-                if (rez.statusCode !== 200) return onFail();
-                fs.writeFileSync(zeresLibDir, body);
-                // eslint-disable-next-line no-undef
-                window.__XL_waitingForWatcherTimeout = setTimeout(() => {
+                delete window.__XL_requireRenamePls;
+                const oldSelfPath = path.join(pluginsDir, path.basename(__filename));
+                const selfContent = fs.readFileSync(oldSelfPath);
+                // avoid windows blocking the file
+                fs.unlinkSync(oldSelfPath);
+                // avoid BDs watcher being shit as per usual
+                setTimeout(() => {
                   try {
-                    if (!window.pluginModule || !window.pluginModule.loadPlugin) {
-                      window.__XL_assumingZLibLoaded = true;
-                      const didRename = window.__XL_requireRenamePls;
-                      window.__XL_waitingForWatcherTimeout = setTimeout(() => {
-                        try {
-                          window.__XL_waitingForWatcherTimeout = setTimeout(() => {
-                            try {
-                              location.reload();
-                            } catch (e) { }
-                          }, 3000);
-                          BdApi.Plugins.reload(this.getName());
-                        } catch (e) { }
-                      }, window.__XL_requireRenamePls ? 3000 : 0);
-                      if (window.__XL_requireRenamePls) {
-                        delete window.__XL_requireRenamePls;
-                        const oldSelfPath = path.join(pluginsDir, path.basename(__filename));
-                        const selfContent = fs.readFileSync(oldSelfPath);
-                        // avoid windows blocking the file
-                        fs.unlinkSync(oldSelfPath);
-                        fs.writeFileSync(path.join(pluginsDir, '1XenoLib.plugin.js'), selfContent);
-                      }
-                      return;
-                    }
-                    window.__XL_assumingZLibLoaded = true;
-                    window.pluginModule.loadPlugin('0PluginLibrary');
+                    fs.writeFileSync(path.join(pluginsDir, '1XenoLib.plugin.js'), selfContent);
                     window.__XL_waitingForWatcherTimeout = setTimeout(() => {
-                      try {
+                      // what the fuck?
+                      BdApi.Plugins.reload(this.getName());
+                    }, 3000);
+                  } catch (e) { }
+                }, 1000);
+              } catch (e) { }
+              return;
+            }
+
+            if (window.__XL_assumingZLibLoaded) return;
+
+            for (const file of fs.readdirSync(pluginsDir)) {
+              if (file.indexOf('.js') !== file.length - 3) continue;
+              try {
+                switch (_extractMeta(fs.readFileSync(path.join(pluginsDir, file), 'utf8')).name) {
+                  case 'XenoLib': {
+                    if (file !== '1XenoLib.plugin.js') if (file === path.basename(__filename)) window.__XL_requireRenamePls = true;
+                    else fs.unlinkSync(path.join(pluginsDir, file));
+
+                    continue;
+                  }
+                  case 'ZeresPluginLibrary': {
+                    fs.unlinkSync(path.join(pluginsDir, file));
+                    continue;
+                  }
+                  default: continue;
+                }
+              } catch (e) { }
+            }
+
+            const https = require('https');
+
+            const onFail = () => BdApi.showConfirmationModal('Well shit', 'Failed to download Zeres Plugin Library, join this server for further assistance:https://discord.gg/NYvWdN5');
+
+            const req = https.get('https://raw.githubusercontent.com/rauenzi/BDPluginLibrary/master/release/0PluginLibrary.plugin.js', { headers: { origin: 'discord.com' } }, res => {
+              let body = '';
+              // eslint-disable-next-line no-void
+              res.on('data', chunk => ((body += new TextDecoder("utf-8").decode(chunk)), void 0));
+              res.on('end', (rez) => {
+                try {
+                  if (rez.statusCode !== 200) return onFail();
+                  fs.writeFileSync(zeresLibDir, body);
+                  // eslint-disable-next-line no-undef
+                  window.__XL_waitingForWatcherTimeout = setTimeout(() => {
+                    try {
+                      if (!window.pluginModule || !window.pluginModule.loadPlugin) {
+                        window.__XL_assumingZLibLoaded = true;
                         const didRename = window.__XL_requireRenamePls;
                         window.__XL_waitingForWatcherTimeout = setTimeout(() => {
                           try {
-                            window.__XL_waitingForWatcherTimeout = setTimeout(onFail, 3000);
+                            window.__XL_waitingForWatcherTimeout = setTimeout(() => {
+                              try {
+                                location.reload();
+                              } catch (e) { }
+                            }, 3000);
                             BdApi.Plugins.reload(this.getName());
-                            if (!BdApi.Plugins.get('XenoLib')) window.pluginModule.loadPlugin('1XenoLib');
                           } catch (e) { }
                         }, window.__XL_requireRenamePls ? 3000 : 0);
                         if (window.__XL_requireRenamePls) {
@@ -2676,42 +2658,63 @@ module.exports = (() => {
                           fs.unlinkSync(oldSelfPath);
                           fs.writeFileSync(path.join(pluginsDir, '1XenoLib.plugin.js'), selfContent);
                         }
-                      } catch (e) { }
-                    }, 3000);
-                  } catch (e) { }
-                }, 3000);
-              } catch (e) { }
+                        return;
+                      }
+                      window.__XL_assumingZLibLoaded = true;
+                      window.pluginModule.loadPlugin('0PluginLibrary');
+                      window.__XL_waitingForWatcherTimeout = setTimeout(() => {
+                        try {
+                          const didRename = window.__XL_requireRenamePls;
+                          window.__XL_waitingForWatcherTimeout = setTimeout(() => {
+                            try {
+                              window.__XL_waitingForWatcherTimeout = setTimeout(onFail, 3000);
+                              BdApi.Plugins.reload(this.getName());
+                              if (!BdApi.Plugins.get('XenoLib')) window.pluginModule.loadPlugin('1XenoLib');
+                            } catch (e) { }
+                          }, window.__XL_requireRenamePls ? 3000 : 0);
+                          if (window.__XL_requireRenamePls) {
+                            delete window.__XL_requireRenamePls;
+                            const oldSelfPath = path.join(pluginsDir, path.basename(__filename));
+                            const selfContent = fs.readFileSync(oldSelfPath);
+                            // avoid windows blocking the file
+                            fs.unlinkSync(oldSelfPath);
+                            fs.writeFileSync(path.join(pluginsDir, '1XenoLib.plugin.js'), selfContent);
+                          }
+                        } catch (e) { }
+                      }, 3000);
+                    } catch (e) { }
+                  }, 3000);
+                } catch (e) { }
+              });
             });
-          });
-          req.on('error', _ => {
-            onFail();
-          });
-          req.end();
-        } catch (e) { }
-      }
-      stop() { }
-      get name() {
-        return config.info.name;
-      }
-      get short() {
-        let string = '';
-        for (let i = 0, len = config.info.name.length; i < len; i++) {
-          const char = config.info.name[i];
-          if (char === char.toUpperCase()) string += char;
+            req.on('error', _ => {
+              onFail();
+            });
+          } catch (e) { }
         }
-        return string;
+        stop() { }
+        get name() {
+          return config.info.name;
+        }
+        get short() {
+          let string = '';
+          for (let i = 0, len = config.info.name.length; i < len; i++) {
+            const char = config.info.name[i];
+            if (char === char.toUpperCase()) string += char;
+          }
+          return string;
+        }
+        get author() {
+          return config.info.authors.map(author => author.name).join(', ');
+        }
+        get version() {
+          return config.info.version;
+        }
+        get description() {
+          return config.info.description;
+        }
       }
-      get author() {
-        return config.info.authors.map(author => author.name).join(', ');
-      }
-      get version() {
-        return config.info.version;
-      }
-      get description() {
-        return config.info.description;
-      }
-    }
-    : buildPlugin(global.ZeresPluginLibrary.buildPlugin(config));
+      : buildPlugin(global.ZeresPluginLibrary.buildPlugin(config));
 })();
 
 /*@end@*/

@@ -42,13 +42,13 @@ module.exports = class MessageLoggerV2 {
     return 'MessageLoggerV2';
   }
   getVersion() {
-    return '1.8.21';
+    return '1.8.22';
   }
   getAuthor() {
     return 'Lighty';
   }
   getDescription() {
-    return 'Saves all deleted and purged messages, as well as all edit history and ghost pings. With highly configurable ignore options, and even restoring deleted messages after restarting Discord.';
+    return 'Rebuild of the Message LoggerV2 Plugin by sshadmin - Credit to 1Lighty for making it.';
   }
   load() { }
   start() {
@@ -509,32 +509,7 @@ module.exports = class MessageLoggerV2 {
         })
     );
 
-    const isMentioned = (() => {
-      const olfilter = Array.prototype.filter
-      Array.prototype.filter = function (callbackFn, thisArg) {
-        return [];
-      }
-      try {
-        let key = null;
-        const mod = ZeresPluginLibrary.WebpackModules.getModule(e => {
-          const numOfGetters = olfilter.call(Object.values(Object.getOwnPropertyDescriptors(e)).map(e => e.get), e => e).length;
-          const numOfProps = Object.keys(e).length;
-          if (!numOfGetters || (numOfGetters !== numOfProps)) return false;
-          for (const prop in e) {
-            const item = e[prop];
-            if (typeof item !== 'function') continue;
-            const str = item.toString();
-            key = prop;
-            if (str.includes('mentionEveryone') && str.includes('roles.includes')) return true;
-          }
-          return false;
-        });
-        if (mod) return mod[key];
-        return null;
-      } finally {
-        Array.prototype.filter = olfilter;
-      }
-    })();
+    const isMentioned = ZeresPluginLibrary.WebpackModules.getModule(e => typeof e === 'function' && e?.toString()?.includes('mentionEveryone') &&  e?.toString()?.includes('roles.includes'), { searchExports: true });
 
     this.tools = {
       openUserContextMenu: null /* NeatoLib.Modules.get('openUserContextMenu').openUserContextMenu */, // TODO: move here
@@ -1041,7 +1016,7 @@ module.exports = class MessageLoggerV2 {
               .getMessages(channelId)
               .toArray()
               .reverse()
-              .find(iMessage => iMessage.author.id === me && iMessage.state === ZeresPluginLibrary.DiscordModules.DiscordConstants.MessageStates.SENT && (!this.messageRecord[iMessage.id] || !this.messageRecord[iMessage.id].delete_data));
+              .find(iMessage => iMessage.author.id === me && iMessage.state === 'SENT' && (!this.messageRecord[iMessage.id] || !this.messageRecord[iMessage.id].delete_data));
         })
     );
     this.patchContextMenus();
@@ -3101,127 +3076,30 @@ module.exports = class MessageLoggerV2 {
     this.menu.queueInterval = setInterval(messageDataManager, this.processUserRequestQueue.queueIntervalTime);
   }
   async patchMessages() {
-    const Tooltip = (() => {
-      const olfilter = Array.prototype.filter
-      Array.prototype.filter = function (callbackFn, thisArg) {
-        return [];
-      }
-      try {
-        let key = null;
-        const mod = ZeresPluginLibrary.WebpackModules.getModule(e => {
-          const numOfGetters = olfilter.call(Object.values(Object.getOwnPropertyDescriptors(e)).map(e => e.get), e => e).length;
-          const numOfProps = Object.keys(e).length;
-          if (!numOfGetters || (numOfGetters !== numOfProps)) return false;
-          for (const prop in e) {
-            const item = e[prop];
-            if (typeof item !== 'function') continue;
-            const str = item.toString();
-            key = prop;
-            if (str.includes('shouldShowTooltip') && str.includes('handleMouseEnter')) return true;
-          }
-          return false;
-        });
-        if (mod) return mod[key];
-        return null;
-      } finally {
-        Array.prototype.filter = olfilter;
-      }
-    })();
-    const dateFormat = (() => {
-      const olfilter = Array.prototype.filter
-      Array.prototype.filter = function (callbackFn, thisArg) {
-        return [];
-      }
-      try {
-        let key = null;
-        const mod = ZeresPluginLibrary.WebpackModules.getModule(e => {
-          const numOfGetters = olfilter.call(Object.values(Object.getOwnPropertyDescriptors(e)).map(e => e.get), e => e).length;
-          const numOfProps = Object.keys(e).length;
-          if (!numOfGetters || (numOfGetters !== numOfProps)) return false;
-          for (const prop in e) {
-            const item = e[prop];
-            if (typeof item !== 'function') continue;
-            const str = item.toString();
-            key = prop;
-            if (str.includes('sameDay')) return true;
-          }
-          return false;
-        });
-        if (mod) return mod[key];
-        return null;
-      } finally {
-        Array.prototype.filter = olfilter;
-      }
-    })();
+    const Tooltip = ZeresPluginLibrary.WebpackModules.getByString('shouldShowTooltip', 'handleMouseEnter');
+    const dateFormat = ZeresPluginLibrary.WebpackModules.getModule(e => typeof e === 'function' && e?.toString()?.includes('sameDay'), { searchExports: true });
     const i18n = ZeresPluginLibrary.WebpackModules.find(e => e.Messages && e.Messages.HOME);
     /* suck it you retarded asshole devilfuck */
     const SuffixEdited = ZeresPluginLibrary.DiscordModules.React.memo(e => ZeresPluginLibrary.DiscordModules.React.createElement(Tooltip, { text: e.timestamp ? dateFormat(e.timestamp, 'LLLL') : null }, tt => ZeresPluginLibrary.DiscordModules.React.createElement('time', Object.assign({ dateTime: e.timestamp.toISOString(), className: this.multiClasses.edited, role: 'note' }, tt), `(${i18n.Messages.MESSAGE_EDITED})`)));
     SuffixEdited.displayName = 'SuffixEdited';
     const parseContent = (() => {
-      const olfilter = Array.prototype.filter
-      Array.prototype.filter = function (callbackFn, thisArg) {
-        return [];
-      }
-      try {
-        let key = null;
-        const mod = ZeresPluginLibrary.WebpackModules.getModule(e => {
-          const numOfGetters = olfilter.call(Object.values(Object.getOwnPropertyDescriptors(e)).map(e => e.get), e => e).length;
-          const numOfProps = Object.keys(e).length;
-          if (!numOfGetters || (numOfGetters !== numOfProps)) return false;
-          for (const prop in e) {
-            const item = e[prop];
-            if (typeof item !== 'function') continue;
-            const str = item.toString();
-            key = prop;
-            if (str.includes('customRenderedContent') && str.includes('renderMediaEmbeds')) return true;
+      const parse = ZeresPluginLibrary.WebpackModules.getModule(e => typeof e === 'function' && e?.toString()?.includes('customRenderedContent') &&  e?.toString()?.includes('renderMediaEmbeds'), { searchExports: true });
+      if (parse) {
+        return function parseContent() {
+          const ReactDispatcher = ZeresPluginLibrary.DiscordModules.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentDispatcher.current;
+          const oUseMemo = ReactDispatcher.useMemo;
+          ReactDispatcher.useMemo = memo => memo();
+          try {
+            return parse(...arguments);
+          } finally {
+            ReactDispatcher.useMemo = oUseMemo;
           }
-          return false;
-        });
-        if (mod) {
-          const pc = mod[key];
-
-          return function parseContent() {
-            const ReactDispatcher = ZeresPluginLibrary.DiscordModules.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentDispatcher.current;
-            const oUseMemo = ReactDispatcher.useMemo;
-            ReactDispatcher.useMemo = memo => memo();
-            try {
-              return pc(...arguments);
-            } finally {
-              ReactDispatcher.useMemo = oUseMemo;
-            }
-          }
+          return {};
         }
-        return null;
-      } finally {
-        Array.prototype.filter = olfilter;
       }
+      return null;
     })();
-    const MessageContent = (() => {
-      const olfilter = Array.prototype.filter
-      Array.prototype.filter = function (callbackFn, thisArg) {
-        return [];
-      }
-      try {
-        let key = null;
-        const mod = ZeresPluginLibrary.WebpackModules.getModule(e => {
-          const numOfGetters = olfilter.call(Object.values(Object.getOwnPropertyDescriptors(e)).map(e => e.get), e => e).length;
-          const numOfProps = Object.keys(e).length;
-          if (!numOfGetters || (numOfGetters !== numOfProps)) return false;
-          for (const prop in e) {
-            const item = e[prop];
-            if (!item || typeof item !== 'object' || !item.type) continue;
-            const str = item.type.toString();
-            key = prop;
-            if (str.includes('Messages.MESSAGE_EDITED')) return true;
-          }
-          return false;
-        });
-        if (mod) return mod[key];
-        return null;
-      } finally {
-        Array.prototype.filter = olfilter;
-      }
-    })();
+    const MessageContent = ZeresPluginLibrary.WebpackModules.getModule(e => e?.type?.toString()?.includes('Messages.MESSAGE_EDITED'));
     const MemoMessage = await (async () => {
       var el = document.querySelector('.messageListItem-ZZ7v6g') || (await new Promise(res => {
         var sub = ZeresPluginLibrary.DOMTools.observer.subscribeToQuerySelector(() => {
@@ -4462,6 +4340,358 @@ module.exports = class MessageLoggerV2 {
   /* ==================================================-|| END MENU ||-================================================== */
   /* ==================================================-|| START CONTEXT MENU ||-================================================== */
   patchContextMenus() {
+    const _this = this;
+
+    this.unpatches.push(BdApi.ContextMenu.patch('message', (ret, props) => {
+      const menu = ZeresPluginLibrary.Utilities.getNestedProp(
+          ZeresPluginLibrary.Utilities.findInReactTree(ret, e => e && e.navId === 'message'),
+          'children'
+      );
+      if (!Array.isArray(menu)) return;
+
+      const newItems = [];
+      const addElement = (label, action, options = {}) => newItems.push({ label, action, ...options });
+
+      addElement('Open Logs', () => this.openWindow());
+
+      const messageId = props.message.id;
+      const channelId = props.channel.id;
+      const record = this.messageRecord[messageId];
+      if (record) {
+        /*
+                addElement('Show in menu', () => {
+                    this.menu.filter = `message:${messageId}`;
+                    this.openWindow();
+                }); */
+        if (record.delete_data) {
+          const options = menu.find(m => m.props.children && m.props.children.length > 10);
+          options.props.children.splice(0, options.props.children.length);
+          addElement(
+              'Hide Deleted Message',
+              () => {
+                this.dispatcher.dispatch({
+                  type: 'MESSAGE_DELETE',
+                  id: messageId,
+                  channelId: channelId,
+                  ML2: true // ignore ourselves lol, it's already deleted
+                  // on a side note, probably does nothing if we don't ignore
+                });
+                this.showToast('Hidden!', { type: 'success' });
+                record.delete_data.hidden = true;
+                this.saveData();
+              }
+          );
+          const idx = this.noTintIds.indexOf(messageId);
+          addElement(
+              `${idx !== -1 ? 'Add' : 'Remove'} Deleted Tint`,
+              () => {
+                if (idx !== -1) this.noTintIds.splice(idx, 1);
+                else this.noTintIds.push(messageId);
+                this.showToast(idx !== -1 ? 'Added!' : 'Removed!', { type: 'success' });
+              }
+          );
+        }
+        if (record.edit_history) {
+          if (record.edits_hidden) {
+            addElement(
+                'Unhide Edits',
+                () => {
+                  record.edits_hidden = false;
+                  this.saveData();
+                  this.dispatcher.dispatch({ type: 'MLV2_FORCE_UPDATE_MESSAGE_CONTENT', id: messageId });
+                }
+            );
+          } else {
+            let target = props.target;
+            if (target) {
+              while (target && target.className && target.className.indexOf(this.style.edited) === -1) {
+                target = target.parentElement;
+              }
+              if (target) {
+                if (!this.editModifiers[messageId]) {
+                  addElement(
+                      'Hide Edits',
+                      () => {
+                        record.edits_hidden = true;
+                        this.saveData();
+                        this.dispatcher.dispatch({ type: 'MLV2_FORCE_UPDATE_MESSAGE_CONTENT', id: messageId });
+                      }
+                  );
+                }
+                const editNum = target.getAttribute('editNum');
+                if (this.editModifiers[messageId]) {
+                  addElement(
+                      `${this.editModifiers[messageId].noSuffix ? 'Show' : 'Hide'} (edited) Tag`,
+                      () => {
+                        this.editModifiers[messageId].noSuffix = true;
+                        this.dispatcher.dispatch({ type: 'MLV2_FORCE_UPDATE_MESSAGE_CONTENT', id: messageId });
+                      }
+                  );
+                  addElement(
+                      `Undo Show As Message`,
+                      () => {
+                        delete this.editModifiers[messageId];
+                        this.dispatcher.dispatch({ type: 'MLV2_FORCE_UPDATE_MESSAGE_CONTENT', id: messageId });
+                      },
+                      this.obfuscatedClass('undo-show-as-message')
+                  );
+                } else if (typeof editNum !== 'undefined' && editNum !== null) {
+                  addElement(
+                      'Show Edit As Message',
+                      () => {
+                        this.editModifiers[messageId] = { editNum };
+                        this.dispatcher.dispatch({ type: 'MLV2_FORCE_UPDATE_MESSAGE_CONTENT', id: messageId });
+                      }
+                  );
+                  addElement(
+                      'Delete Edit',
+                      () => {
+                        this.deleteEditedMessageFromRecord(messageId, parseInt(editNum));
+                        this.dispatcher.dispatch({ type: 'MLV2_FORCE_UPDATE_MESSAGE_CONTENT', id: messageId });
+                      },
+                      { color: 'colorDanger' }
+                  );
+                }
+              }
+            }
+          }
+        }
+        if (record) {
+          addElement(
+              'Remove From Log',
+              () => {
+                this.deleteMessageFromRecords(messageId);
+                this.saveData();
+                if (record.delete_data) {
+                  this.dispatcher.dispatch({
+                    type: 'MESSAGE_DELETE',
+                    id: messageId,
+                    channelId: channelId,
+                    ML2: true // ignore ourselves lol, it's already deleted
+                    // on a side note, probably does nothing if we don't ignore
+                  });
+                } else {
+                  this.dispatcher.dispatch({ type: 'MLV2_FORCE_UPDATE_MESSAGE_CONTENT', id: messageId });
+                }
+              },
+              { color: 'colorDanger' }
+          );
+        }
+      }
+
+      menu.push(BdApi.ContextMenu.buildMenuChildren([{
+        type: 'group',
+        items: [{
+          type: 'submenu',
+          label: this.settings.contextmenuSubmenuName,
+          items: newItems
+        }]
+      }]));
+    }));
+
+    const handleWhiteBlackList = (newItems, id) => {
+      const addElement = (label, action, options = {}) => newItems.push({ label, action, ...options });
+      const whitelistIdx = this.settings.whitelist.findIndex(m => m === id);
+      const blacklistIdx = this.settings.blacklist.findIndex(m => m === id);
+      if (whitelistIdx == -1 && blacklistIdx == -1) {
+        addElement(
+            `Add to Whitelist`,
+            () => {
+              this.settings.whitelist.push(id);
+              this.saveSettings();
+              this.showToast('Added!', { type: 'success' });
+            }
+        );
+        addElement(
+            `Add to Blacklist`,
+            () => {
+              this.settings.blacklist.push(id);
+              this.saveSettings();
+              this.showToast('Added!', { type: 'success' });
+            }
+        );
+      } else if (whitelistIdx != -1) {
+        addElement(
+            `Remove From Whitelist`,
+            () => {
+              this.settings.whitelist.splice(whitelistIdx, 1);
+              this.saveSettings();
+              this.showToast('Removed!', { type: 'success' });
+            }
+        );
+        addElement(
+            `Move to Blacklist`,
+            () => {
+              this.settings.whitelist.splice(whitelistIdx, 1);
+              this.settings.blacklist.push(id);
+              this.saveSettings();
+              this.showToast('Moved!', { type: 'success' });
+            }
+        );
+      } else {
+        addElement(
+            `Remove From Blacklist`,
+            () => {
+              this.settings.blacklist.splice(blacklistIdx, 1);
+              this.saveSettings();
+              this.showToast('Removed!', { type: 'success' });
+            }
+        );
+        addElement(
+            `Move to Whitelist`,
+            () => {
+              this.settings.blacklist.splice(blacklistIdx, 1);
+              this.settings.whitelist.push(id);
+              this.saveSettings();
+              this.showToast('Moved!', { type: 'success' });
+            }
+        );
+      }
+      const notifIdx = this.settings.notificationBlacklist.indexOf(id);
+      addElement(
+          `${notifIdx === -1 ? 'Add To' : 'Remove From'} Notification Blacklist`,
+          () => {
+            if (notifIdx === -1) this.settings.notificationBlacklist.push(id);
+            else this.settings.notificationBlacklist.splice(notifIdx, 1);
+            this.saveSettings();
+            this.showToast(notifIdx === -1 ? 'Added!' : 'Removed!', { type: 'success' });
+          }
+      );
+    };/*
+
+    this.unpatches.push(BdApi.ContextMenu.patch('channel-context', (ret, props) => {
+      console.log(ret, props);
+      const menu = ZeresPluginLibrary.Utilities.getNestedProp(
+        ZeresPluginLibrary.Utilities.findInReactTree(ret, e => e && e.navId === 'channel-context'),
+        'children'
+      );
+      if (!Array.isArray(menu)) return;
+
+      const newItems = [];
+      const addElement = (label, action, options = {}) => newItems.push({ label, action, ...options });
+
+      addElement('Open Logs', () => this.openWindow());
+      addElement(
+        `Open Log For Channel`,
+        () => {
+          _this.menu.filter = `channel:${props.channel.id}`;
+          _this.openWindow();
+        }
+      );
+      handleWhiteBlackList(newItems, props.channel.id);
+
+      menu.push(BdApi.ContextMenu.buildMenuChildren([{
+        type: 'group',
+        items: [{
+          type: 'submenu',
+          label: this.settings.contextmenuSubmenuName,
+          items: newItems
+        }]
+      }]));
+    })); */
+
+    this.unpatches.push(BdApi.ContextMenu.patch('guild-context', (ret, props) => {
+      const menu = ZeresPluginLibrary.Utilities.getNestedProp(
+          ZeresPluginLibrary.Utilities.findInReactTree(ret, e => e && e.navId === 'guild-context'),
+          'children'
+      );
+      if (!Array.isArray(menu)) return;
+
+      const newItems = [];
+      const addElement = (label, action, options = {}) => newItems.push({ label, action, ...options });
+
+      addElement('Open Logs', () => this.openWindow());
+
+      addElement(
+          `Open Log For Guild`,
+          () => {
+            _this.menu.filter = `guild:${props.guild.id}`;
+            _this.openWindow();
+          }
+      );
+      handleWhiteBlackList(newItems, props.guild.id);
+
+      menu.push(BdApi.ContextMenu.buildMenuChildren([{
+        type: 'group',
+        items: [{
+          type: 'submenu',
+          label: this.settings.contextmenuSubmenuName,
+          items: newItems
+        }]
+      }]));
+    }));
+
+    this.unpatches.push(BdApi.ContextMenu.patch('user-context', (ret, props) => {
+      const menu = ZeresPluginLibrary.Utilities.getNestedProp(
+          ZeresPluginLibrary.Utilities.findInReactTree(ret, e => e && e.navId === 'user-context'),
+          'children'
+      );
+      if (!Array.isArray(menu)) return;
+
+      const newItems = [];
+      const addElement = (label, action, options = {}) => newItems.push({ label, action, ...options });
+
+      addElement('Open Logs', () => this.openWindow());
+      addElement(
+          `Open Log For User`,
+          () => {
+            _this.menu.filter = `user:${props.user.id}`;
+            _this.openWindow();
+          }
+      );
+
+      if (props.channel?.isDM()) {
+        addElement(
+            `Open Log For DM`,
+            () => {
+              _this.menu.filter = `channel:${props.channel.id}`;
+              _this.openWindow();
+            }
+        );
+
+        handleWhiteBlackList(newItems, props.channel.id);
+      }
+
+      menu.push(BdApi.ContextMenu.buildMenuChildren([{
+        type: 'group',
+        items: [{
+          type: 'submenu',
+          label: this.settings.contextmenuSubmenuName,
+          items: newItems
+        }]
+      }]));
+    }));
+
+    this.unpatches.push(BdApi.ContextMenu.patch('gdm-context', (ret, props) => {
+      const menu = ZeresPluginLibrary.Utilities.getNestedProp(
+          ZeresPluginLibrary.Utilities.findInReactTree(ret, e => e && e.navId === 'gdm-context'),
+          'children'
+      );
+      if (!Array.isArray(menu)) return;
+
+      const newItems = [];
+      const addElement = (label, action, options = {}) => newItems.push({ label, action, ...options });
+
+      addElement('Open Logs', () => this.openWindow());
+      addElement(
+          `Open Log For Channel`,
+          () => {
+            _this.menu.filter = `channel:${props.channel.id}`;
+            _this.openWindow();
+          }
+      );
+      handleWhiteBlackList(newItems, props.channel.id);
+
+      menu.push(BdApi.ContextMenu.buildMenuChildren([{
+        type: 'group',
+        items: [{
+          type: 'submenu',
+          label: this.settings.contextmenuSubmenuName,
+          items: newItems
+        }]
+      }]));
+    }));
+
     return;
     const Patcher = XenoLib.createSmartPatcher({ before: (moduleToPatch, functionName, callback, options = {}) => ZeresPluginLibrary.Patcher.before(this.getName(), moduleToPatch, functionName, callback, options), instead: (moduleToPatch, functionName, callback, options = {}) => ZeresPluginLibrary.Patcher.instead(this.getName(), moduleToPatch, functionName, callback, options), after: (moduleToPatch, functionName, callback, options = {}) => ZeresPluginLibrary.Patcher.after(this.getName(), moduleToPatch, functionName, callback, options), unpatchAll: () => ZeresPluginLibrary.Patcher.unpatchAll(this.getName()) });
     const WebpackModules = ZeresPluginLibrary.WebpackModules;
@@ -4816,7 +5046,7 @@ module.exports = class MessageLoggerV2 {
     }
     this.unpatches.push(XenoLib.listenLazyContextMenu('MessageContextMenu', messageContextPatch));
 
-    const handleWhiteBlackList = (newItems, id) => {
+    const handleWhiteBlackList_ = (newItems, id) => {
       const addElement = (label, callback, id, options = {}) => newItems.push(XenoLib.createContextMenuItem(label, callback, id, options));
       const whitelistIdx = this.settings.whitelist.findIndex(m => m === id);
       const blacklistIdx = this.settings.blacklist.findIndex(m => m === id);
