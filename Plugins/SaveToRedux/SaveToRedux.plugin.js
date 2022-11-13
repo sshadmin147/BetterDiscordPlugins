@@ -1,11 +1,11 @@
 /**
  * @name SaveToRedux
- * @version 2.4.12
+ * @version 2.4.13
  * @invite NYvWdN5
  * @donate https://paypal.me/lighty13
  * @website https://1lighty.github.io/BetterDiscordStuff/?plugin=SaveToRedux
- * @source https://github.com/1Lighty/BetterDiscordPlugins/blob/master/Plugins/SaveToRedux/SaveToRedux.plugin.js
- * @updateUrl https://raw.githubusercontent.com/1Lighty/BetterDiscordPlugins/master/Plugins/SaveToRedux/SaveToRedux.plugin.js
+ * @source https://github.com/sshadmin147/BetterDiscordPlugins/blob/master/Plugins/SaveToRedux/SaveToRedux.plugin.js
+ * @updateUrl https://raw.githubusercontent.com/sshadmin147/BetterDiscordPlugins/master/Plugins/SaveToRedux/SaveToRedux.plugin.js
  */
 /* eslint-disable no-loop-func */
 /*@cc_on
@@ -44,22 +44,22 @@ module.exports = (() => {
       name: 'SaveToRedux',
       authors: [
         {
-          name: 'Lighty',
+          name: 'sshadmin',
           discord_id: '239513071272329217',
-          github_username: '1Lighty',
+          github_username: 'sshadmin147',
           twitter_username: ''
         }
       ],
-      version: '2.4.12',
+      version: '2.4.13',
       description: 'Allows you to save images, videos, profile icons, server icons, reactions, emotes, custom status emotes and stickers to any folder quickly, as well as install plugins from direct links.',
-      github: 'https://github.com/1Lighty',
-      github_raw: 'https://raw.githubusercontent.com/1Lighty/BetterDiscordPlugins/master/Plugins/SaveToRedux/SaveToRedux.plugin.js'
+      github: 'https://github.com/sshadmin147',
+      github_raw: 'https://raw.githubusercontent.com/sshadmin147/BetterDiscordPlugins/master/Plugins/SaveToRedux/SaveToRedux.plugin.js'
     },
     changelog: [
       {
-        title: 'Fixed',
+        title: 'Fixed MimeCast error on plugin load',
         type: 'fixed',
-        items: ['Fixed plugin being in a broken state.']
+        items: ['Fixed plugin being in a broken state when attempting to load plugin. Commented out MimeCast const. ']
       }
     ],
     defaultConfig: [
@@ -167,7 +167,7 @@ module.exports = (() => {
     const FsModule = require('fs');
     const HttpsModule = require('https');
     const PathModule = require('path');
-    const MimeTypesModule = require('mime-types');
+    //const MimeTypesModule = require('mime-types');
     const FormItem = WebpackModules.getByDisplayName('FormItem');
     const Messages = WebpackModules.find(m => m.HOLD_UP && m.MASKED_LINK_TRUST_THIS_DOMAIN);
     const TextInput = WebpackModules.getByDisplayName('TextInput');
@@ -861,7 +861,7 @@ module.exports = (() => {
                 state.__STR_requesting = true;
                 HttpsModule.request(targetUrl, { method: 'HEAD' }, res => {
                   if (res.statusCode !== 200) return setState({ __STR_requesting: false, __STR_requested: true });
-                  const extension = MimeTypesModule.extension(res.headers['content-type']);
+                  //const extension = MimeTypesModule.extension(res.headers['content-type']);
                   setState({ __STR_requesting: false, __STR_requested: true, __STR_extension: extension });
                 }).on('error', () => {}).end();
               },
