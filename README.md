@@ -1,3 +1,12 @@
+# This is a fork of Lighty's BetterDiscord Plugins.
+
+## None of the plugins I claim ownership over, purely adjusting for personal use. All credit goes to Lighty.
+Please see below for details on how to support Lighty to continue his amazing work on his plugins.
+
+Links below lead to his repo only. I will not be adjusting these to mine so he continues to get the credit needed.
+
+---
+
 # BetterDiscordPlugins
 #### Info
 All of these plugins are developed by me (Lighty), unless otherwise stated.
