@@ -1,7 +1,7 @@
 /**
  * @name MessageLoggerV2-Rebuild
  * @description Rebuild of the Message LoggerV2 Plugin by sshadmin - Credit to 1Lighty for making it.
- * @version 1.8.22
+ * @version 1.8.221
  * @donate https://paypal.me/lighty13
  * @website https://1lighty.github.io/BetterDiscordStuff/?plugin=MessageLoggerV2
  * @source https://github.com/sshadmin147/BetterDiscordPlugins/blob/master/Plugins/MessageLoggerV2/MessageLoggerV2.plugin.js
@@ -42,7 +42,7 @@ module.exports = class MessageLoggerV2 {
     return 'MessageLoggerV2';
   }
   getVersion() {
-    return '1.8.22';
+    return '1.8.221';
   }
   getAuthor() {
     return 'Lighty';
